@@ -61,26 +61,3 @@ T_Position* ajouterPosition(T_Position* listeP, int ligne, int ordre, int phrase
 
     return listeP;
 }
-
-int ajouterOccurence(T_Index* index, char* mot, int ligne, int ordre, int phrase) {
-    // Convertir le mot en minuscules
-    int i;
-    for (i = 0; mot[i] != '\0'; i++) {
-        mot[i] = tolower(mot[i]);
-    }
-
-    // Parcourir l'arbre à la recherche du noeud correspondant
-    T_Noeud** courant = &(index->racine);
-    while (*courant != NULL) {
-        int cmp = strcmp(mot, (*courant)->mot);
-        if (cmp == 0) {
-            // Le mot est déjà présent dans l'arbre
-            (*courant)->nbOccurences++;
-            (*courant)->listePositions = ajouterPosition((*courant)->listePositions, ligne, ordre, phrase);
-            return 1;
-        } else if (cmp < 0) {
-            // Le mot est plus petit que le noeud courant, on descend dans le fils gauche
-            courant = &((*courant)->filsGauche);
-        } else {
-            // Le mot est plus grand que le noeud courant, on descend dans le fils droit
-            courant = &((*courant)->f
