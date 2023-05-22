@@ -1,6 +1,6 @@
 #ifndef TP4_H_INCLUDED
 #define TP4_H_INCLUDED
-# define MAXP 100
+# define MAXP 200
 
 
 
@@ -27,8 +27,8 @@ typedef struct Index {
 } T_Index;
 
 
-//Ajout d'un élément dans la liste
-T_Position *ajouterPosition(T_Position *listeP, int ligne, int ordre, int phrase);
+//Ajout d'un element dans la liste
+T_Position* ajouterPosition(T_Position *listeP, int ligne, int ordre, int phrase);
 
 //Ajout d'un mot dans l'index
 int ajouterOccurence(T_Index *index, char *mot, int ligne, int ordre, int phrase);
@@ -54,16 +54,16 @@ void construireTexte(T_Index index, char *filename);
 
 
 typedef struct pile {
-    int sommet ; // Indice de l ’ element au sommet de la pile
+    int sommet ; // Indice de l ï¿½ element au sommet de la pile
     int tab [ MAXP ];
 } pile ;
 
 
 pile creer_pile () ;
-int pile_vide ( pile * p) ;
-int pile_pleine ( pile * p ) ;
-int empiler ( pile * p , int val ) ;
-int depiler ( pile * p ) ;
+int pile_vide ( pile p) ;
+int pile_pleine ( pile p ) ;
+int empiler ( pile p , T_Noeud* val ) ;
+int depiler ( pile p ) ;
 
 void afficher_pile ( pile p ) ;
 
