@@ -5,7 +5,7 @@
 #include "tp4.h"
 
 /***********************************
-**Ajout d'un élément dans la liste**
+**Ajout d'un element dans la liste**
 ***********************************/
 T_Position* ajouterPosition(T_Position* listeP, int ligne, int ordre, int phrase) {
     T_Position* nouvelElement = (T_Position*) malloc(sizeof(T_Position));
@@ -19,13 +19,13 @@ T_Position* ajouterPosition(T_Position* listeP, int ligne, int ordre, int phrase
         return nouvelElement;
     }
 
-    // Cas d'insertion en tête de liste
+    // Cas d'insertion en tÃªte de liste
     if (nouvelElement->numeroLigne < listeP->numeroLigne || (nouvelElement->numeroLigne == listeP->numeroLigne && nouvelElement->ordre < listeP->ordre)) {
         nouvelElement->suivant = listeP;
         return nouvelElement;
     }
 
-    // Cas général d'insertion
+    // Cas gÃ©nÃ©ral d'insertion
     T_Position* courant = listeP;
     while (courant->suivant != NULL && (nouvelElement->numeroLigne > courant->suivant->numeroLigne || (nouvelElement->numeroLigne == courant->suivant->numeroLigne && nouvelElement->ordre >= courant->suivant->ordre))) {
         courant = courant->suivant;
@@ -46,13 +46,13 @@ int ajouterOccurence(T_Index *index, char *mot, int ligne, int ordre, int phrase
         mot++;
     }
 
-    //Si on insère à la racine
+    //Si on insÃ¨re Ã  la racine
     if(index->racine == NULL){
         index->racine = creernoeud(mot, ligne, ordre, phrase);
         return 1;
     }
 
-    //Cas général
+    //Cas gÃ©nÃ©ral
     T_Noeud* parcours = index->racine;
     T_Noeud* pere = NULL;
     while(parcours != NULL)
@@ -90,12 +90,13 @@ int indexerFichier(T_Index *index, char *filename)
     //Ouvrir un fichier et en lire son contenu
     FILE* fichier = NULL;
     fichier = fopen(filename, "r");
-    if (fichier != NULL){       // On peut lire et écrire dans le fichier
+    if (fichier != NULL){       // On peut lire et ecrire dans le fichier
 
         char mot[100];
-        int ligne =0, phrase=0, ordre=0;
+        int ligne =0, phrase=0, ordre=0, compteur=0;
         while (fscanf(fichier, "%s", mot) == 1) {
             if(strcmp(mot,'.') == 0){
+                compteur++;
                 phrase++;
                 ordre = 0;
             }
@@ -107,11 +108,12 @@ int indexerFichier(T_Index *index, char *filename)
             }
             ordre++;
         }
-    fclose(fichier); // On ferme le fichier qui a été ouvert
+    fclose(fichier); // On ferme le fichier qui a ete ouvert
+    return compteur; //On renvoie le nombre de mot lu
     }
     else{
         printf("Impossible d'ouvrir le fichier %s", filename);
-        return ;
+        return 0;
     }
 }
 
@@ -122,50 +124,23 @@ int indexerFichier(T_Index *index, char *filename)
 ********************/
 void afficherIndex(T_Index* index)
 {
-    T_Noeud* parcour = index->racine;
-    pile* P = creer_pile();
-    int N = 1;
-    while(P->sommet == -1 || (N == 1 && parcour != NULL)){
-        if(N==1 && parcour != NULL){
-            empiler(P, (parcour, 1));
-            parcour = parcour->filsGauche;
+    T_Noeud* courant = index->racine;
+    pile P = creer_pile();
+
+    while (P.sommet == -1 || courant != NULL){
+        while(courant != NULL){
+            empiler(P, courant);
+            courant = courant->filsGauche;
         }
-        else {
-            (parcour, N) = depiler(P);
-            if(N == 1 ){
-                printf("|-- %s", parcour->mot);
-                T_Position* position = parcour->listePositions;
-                while(position != NULL){
-                    printf("|---- (l:%d, o:%d, p:%d)", position->numeroLigne, position->ordre, position->phrase);
-                    position = position->suivant;
-                }
-                //finir parcours + gérer l'affichage des lettres
-            }
-        }
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   /* while(parcour != NULL){
-        printf("|-- %s", parcour->mot);
-        T_Position* position = parcour->listePositions;
+        courant = depiler(P);
+        printf("|-- %s", courant->mot);
+        T_Position* position = courant->listePositions;
         while(position != NULL){
-            printf("|---- (l:%d, o:%d, p:%d)", position->numeroLigne, position->ordre, position->phrase);
-            position = position->suivant;
+                printf("|---- (l:%d, o:%d, p:%d)", position->numeroLigne, position->ordre, position->numeroPhrase);
+                position = position->suivant;
         }
-        parcour = parcour
-    }*/
+        courant = courant->filsDroit;
+    }
 }
 
 
@@ -226,38 +201,38 @@ pile creer_pile()
     return p;
 }
 
-int pile_vide(pile* p)
+int pile_vide(pile p)
 {
-    return(p->sommet == -1);
+    return(p.sommet == -1);
 }
 
-int pile_pleine(pile* p)
+int pile_pleine(pile p)
 {
-    return(p->sommet == MAXP -1);
+    return(p.sommet == MAXP -1);
 }
 
-int empiler(pile* p, int val)
+int empiler(pile p, T_Noeud* val)
 {
     if(pile_pleine(p)){
         printf("Erreur : Pile pleine \n");
         return 0;
     }
     else {
-        p->sommet++;
-        p->tab[p->sommet] = val ;
+        p.sommet++;
+        p.tab[p.sommet] = val ;
         return 1;
     }
 }
 
 
-int depiler(pile* p)
+int depiler(pile p)
 {
     if(pile_vide(p)){
         printf("Erreur : Pile vide \n");
-        return INT_MAX;
+        return NULL;
     }
     else {
-        p->sommet--;
-        return p->tab[p->sommet+1];
+        p.sommet--;
+        return p.tab[p.sommet+1];
     }
 }
