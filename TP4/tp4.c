@@ -5,7 +5,7 @@
 #include "tp4.h"
 
 /***********************************
-**Ajout d'un élément dans la liste**
+**Ajout d'un Ã©lÃ©ment dans la liste**
 ***********************************/
 T_Position* ajouterPosition(T_Position* listeP, int ligne, int ordre, int phrase) {
     T_Position* nouvelElement = (T_Position*) malloc(sizeof(T_Position));
@@ -19,13 +19,13 @@ T_Position* ajouterPosition(T_Position* listeP, int ligne, int ordre, int phrase
         return nouvelElement;
     }
 
-    // Cas d'insertion en tête de liste
+    // Cas d'insertion en tÃªte de liste
     if (nouvelElement->numeroLigne < listeP->numeroLigne || (nouvelElement->numeroLigne == listeP->numeroLigne && nouvelElement->ordre < listeP->ordre)) {
         nouvelElement->suivant = listeP;
         return nouvelElement;
     }
 
-    // Cas général d'insertion
+    // Cas gÃ©nÃ©ral d'insertion
     T_Position* courant = listeP;
     while (courant->suivant != NULL && (nouvelElement->numeroLigne > courant->suivant->numeroLigne || (nouvelElement->numeroLigne == courant->suivant->numeroLigne && nouvelElement->ordre >= courant->suivant->ordre))) {
         courant = courant->suivant;
@@ -46,13 +46,13 @@ int ajouterOccurence(T_Index *index, char *mot, int ligne, int ordre, int phrase
         mot++;
     }
 
-    //Si on insère à la racine
+    //Si on insÃ¨re Ã  la racine
     if(index->racine == NULL){
         index->racine = creernoeud(mot, ligne, ordre, phrase);
         return 1;
     }
 
-    //Cas général
+    //Cas gÃ©nÃ©ral
     T_Noeud* parcours = index->racine;
     T_Noeud* pere = NULL;
     while(parcours != NULL)
@@ -90,12 +90,13 @@ int indexerFichier(T_Index *index, char *filename)
     //Ouvrir un fichier et en lire son contenu
     FILE* fichier = NULL;
     fichier = fopen(filename, "r");
-    if (fichier != NULL){       // On peut lire et écrire dans le fichier
+    if (fichier != NULL){       // On peut lire et ecrire dans le fichier
 
         char mot[100];
-        int ligne =0, phrase=0, ordre=0;
+        int ligne =0, phrase=0, ordre=0, compteur=0;
         while (fscanf(fichier, "%s", mot) == 1) {
             if(strcmp(mot,'.') == 0){
+                compteur++;
                 phrase++;
                 ordre = 0;
             }
@@ -107,11 +108,12 @@ int indexerFichier(T_Index *index, char *filename)
             }
             ordre++;
         }
-    fclose(fichier); // On ferme le fichier qui a été ouvert
+    fclose(fichier); // On ferme le fichier qui a ete ouvert
+    return compteur; //On renvoie le nombre de mot lu
     }
     else{
         printf("Impossible d'ouvrir le fichier %s", filename);
-        return ;
+        return 0;
     }
 }
 
@@ -139,7 +141,7 @@ void afficherIndex(T_Index* index)
                     printf("|---- (l:%d, o:%d, p:%d)", position->numeroLigne, position->ordre, position->phrase);
                     position = position->suivant;
                 }
-                //finir parcours + gérer l'affichage des lettres
+                //finir parcours + gÃ©rer l'affichage des lettres
             }
         }
     }
