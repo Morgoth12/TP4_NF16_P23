@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include "tp4.h"
+#include "tp4v2.h"
 
 
 
@@ -67,28 +67,28 @@ int main()
 
             case '4' :;
 
-            char motRecherche[100];
-            printf("Entrez le mot que vous voulez rechercher : ");
-            scanf("%c", &motRecherche);
+                char motRecherche[100];
+                printf("Entrez le mot que vous voulez rechercher : ");
+                scanf(" %s", &motRecherche);
 
-            // Appel de la fonction de recherche
-            T_Noeud* resultat = rechercherMot(index, motRecherche);
+                // Appel de la fonction de recherche
+                T_Noeud* resultat = rechercherMot(index, motRecherche);
 
-            if (resultat != NULL) {
-                printf("%s : \n", resultat->mot);
-                T_Position* parcour = resultat->listePositions;
-                for(int i=0;i<resultat->nbOccurences;i++){
-                    printf("");
-                    printf("Numero de ligne : %d", parcour->numeroLigne);
-                    printf("Position dans la ligne ; %d", parcour->ordre);
-                    printf("Numero de phrase : %d", parcour->numeroPhrase);
+                if (resultat != NULL) {
+                    printf("%s : \n", resultat->mot);
+                    T_Position* parcour = resultat->listePositions;
+                    for(int i=0;i<resultat->nbOccurences;i++){
+                        printf("Occurence numero %d\n", i+1);
+                        printf("Numero de ligne : %d\n", parcour->numeroLigne);
+                        printf("Position dans la ligne : %d\n", parcour->ordre);
+                        printf("Numero de phrase : %d\n\n", parcour->numeroPhrase);
 
-                    parcour = parcour->suivant;
+                        parcour = parcour->suivant;
+                    }
+                } else {
+                    printf("Mot non trouve.\n");
                 }
-            } else {
-                printf("Mot non trouve.\n");
-            }
-
+                viderBuffer();
 
                 break;
 
@@ -102,7 +102,7 @@ int main()
 
             case '7' :
                 printf("\n======== PROGRAMME TERMINE ========\n");
-                //Fiare une boucle qui free les noeuds et les positions
+                //Faire une boucle qui free les noeuds et les positions
                 free(index);
                 break;
 
